@@ -40,9 +40,9 @@ public class DeptDAO {
 
         while (rs.next()) {
             Dept d = new Dept();
-            d.deptNo = rs.getInt("deptNo");
-            d.dname = rs.getString("dname");
-            d.loc = rs.getString("loc");
+            d.setDeptNo(rs.getInt("deptNo"));
+            d.setDname(rs.getString("dname"));
+            d.setLoc(rs.getString("loc"));
             list.add(d);
 
         }
