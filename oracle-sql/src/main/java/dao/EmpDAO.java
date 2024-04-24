@@ -8,6 +8,31 @@ import java.util.HashMap;
 import vo.Emp;
 
 public class EmpDAO {
+    public static ArrayList<Emp> selectEmpListSort(String col, String sort) throws Exception {
+        // System.out.println("<EmpDAO> col : " + col);
+        // System.out.println("<EmpDAO> sort : " + sort);
+        ArrayList<Emp> list = new ArrayList<>();
+
+        Connection conn = DBHelper.getConnection();
+        String sql = "SELECT empno, ename FROM emp";
+        if (col != null && sort != null) {
+            sql = sql + " ORDER BY " + col + " " + sort;
+        }
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Emp e = new Emp();
+            e.setEmpNo(rs.getInt("empno"));
+            e.setEname(rs.getString("ename"));
+            list.add(e);
+        }
+
+        conn.close();
+
+        return list;
+    }
+
     public static ArrayList<Emp> selectEmpListByGradeEmp(ArrayList<Integer> ckList) throws Exception {
         ArrayList<Emp> list = new ArrayList<>();
 

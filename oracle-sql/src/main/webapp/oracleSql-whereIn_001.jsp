@@ -24,7 +24,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Case - Query예제_001</title>
+    <title>WhereIn - Query예제_001</title>
 </head>
 <body>
     <h1>Emp Grade Search</h1>
