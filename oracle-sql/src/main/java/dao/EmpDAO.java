@@ -8,6 +8,57 @@ import java.util.HashMap;
 import vo.Emp;
 
 public class EmpDAO {
+    public static ArrayList<HashMap<String, Object>> selectEmpSelfJoin() throws Exception {
+        ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String, Object>>();
+
+        Connection conn = DBHelper.getConnection();
+
+        String sql =
+                "SELECT e1.empno empNo, e1.ename ename, e1.grade grade, NVL(e2.ename, '대기중') mgrName, NVL(e2.grade, 0) mgrGrade FROM emp e1 LEFT OUTER JOIN emp e2 ON e1.mgr = e2.empno ORDER BY e1.empno ASC";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("empNo", rs.getInt("empNo"));
+            map.put("ename", rs.getString("ename"));
+            map.put("grade", rs.getInt("grade"));
+            map.put("mgrName", rs.getString("mgrName"));
+            map.put("mgrGrade", rs.getInt("mgrGrade"));
+            list.add(map);
+        }
+
+        conn.close();
+
+        return list;
+    }
+
+
+    public static ArrayList<HashMap<String, Integer>> selectEmpSalStats() throws Exception {
+        ArrayList<HashMap<String, Integer>> list = new ArrayList<HashMap<String, Integer>>();
+
+        Connection conn = DBHelper.getConnection();
+
+        String sql = "SELECT grade, count(*) count, SUM(sal) sum, AVG(sal) avg, MAX(sal) max, MIN(sal) min FROM emp GROUP BY grade ORDER BY grade ASC";
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            HashMap<String, Integer> map = new HashMap<>();
+            map.put("grade", rs.getInt("grade"));
+            map.put("count", rs.getInt("count"));
+            map.put("sum", rs.getInt("sum"));
+            map.put("avg", rs.getInt("avg"));
+            map.put("max", rs.getInt("max"));
+            map.put("min", rs.getInt("min"));
+            list.add(map);
+        }
+
+        conn.close();
+
+        return list;
+    }
+
     public static ArrayList<Emp> selectEmpListSort(String col, String sort) throws Exception {
         // System.out.println("<EmpDAO> col : " + col);
         // System.out.println("<EmpDAO> sort : " + sort);
@@ -96,7 +147,7 @@ public class EmpDAO {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            HashMap<String, String> map = new HashMap<String, String>();
+            HashMap<String, String> map = new HashMap<>();
             map.put("ename", rs.getString("ename"));
             map.put("job", rs.getString("job"));
             map.put("직무", rs.getString("직무"));
